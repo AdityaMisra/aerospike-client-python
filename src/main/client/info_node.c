@@ -315,7 +315,7 @@ PyObject * AerospikeClient_InfoNode(AerospikeClient * self, PyObject * args, PyO
 			}
 
 			PyList_Append(return_value, py_host_pair);
-			Py_DecRef(py_host_pair);
+			Py_DECREF(py_host_pair);
 		}
 	CLEANUP:
 		if(nodes) {
