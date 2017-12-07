@@ -2638,9 +2638,9 @@ Write Policies
             | **WARNING**: Database writes that are not idempotent (such as "add") should not be retried because the write operation may be performed multiple times
             | if the client timed out previous transaction attempts. It's important to use a distinct write policy for non-idempotent writes which sets max_retries = `0`;
             |
-            | Default: ``2``
+            | Default: ``0``
         * **sleep_between_retries**
-            | An :class:`int`. Milliseconds to sleep between retries. Enter zero to skip sleep. Default: ``500``
+            | An :class:`int`. Milliseconds to sleep between retries. Enter zero to skip sleep. Default: ``0``
         * **socket_timeout**
             | An :class:`int`. Socket idle timeout in milliseconds when processing a database command.
             |
@@ -2660,7 +2660,6 @@ Write Policies
         * **key** one of the ``aerospike.POLICY_KEY_*`` values such as :data:`aerospike.POLICY_KEY_DIGEST`
         * **exists** one of the ``aerospike.POLICY_EXISTS_*`` values such as :data:`aerospike.POLICY_EXISTS_CREATE`
         * **gen** one of the ``aerospike.POLICY_GEN_*`` values such as :data:`aerospike.POLICY_GEN_IGNORE`
-        * **max_retries** integer, number of times to attempt to retry. Default `2`
         * **commit_level** one of the ``aerospike.POLICY_COMMIT_LEVEL_*`` values such as :data:`aerospike.POLICY_COMMIT_LEVEL_ALL`
         * **durable_delete** boolean value: True to perform durable delete (requires Enterprise server version >= 3.10)
 
@@ -2736,11 +2735,11 @@ Operate Policies
             | **WARNING**: Database writes that are not idempotent (such as "add") should not be retried because the write operation may be performed multiple times
             | if the client timed out previous transaction attempts. It's important to use a distinct write policy for non-idempotent writes which sets max_retries = `0`;
             |
-            | Default: ``2``
+            | Default: ``0``
         * **sleep_between_retries**
             | An :class:`int`. Milliseconds to sleep between retries. Enter zero to skip sleep.
             |
-            | Default: ``500``
+            | Default: ``0``
         * **socket_timeout**
             | An :class:`int`. Socket idle timeout in milliseconds when processing a database command.
             |
@@ -2788,9 +2787,9 @@ Apply Policies
             | **WARNING**: Database writes that are not idempotent (such as "add") should not be retried because the write operation may be performed multiple times
             | if the client timed out previous transaction attempts. It's important to use a distinct write policy for non-idempotent writes which sets max_retries = `0`;
             |
-            | Default: ``2``
+            | Default: ``0``
         * **sleep_between_retries**
-            | An :class:`int`. Milliseconds to sleep between retries. Enter zero to skip sleep. Default: ``500``
+            | An :class:`int`. Milliseconds to sleep between retries. Enter zero to skip sleep. Default: ``0``
         * **socket_timeout**
             | An :class:`int`. Socket idle timeout in milliseconds when processing a database command.
             |
@@ -2835,9 +2834,9 @@ Remove Policies
             | **WARNING**: Database writes that are not idempotent (such as "add") should not be retried because the write operation may be performed multiple times
             | if the client timed out previous transaction attempts. It's important to use a distinct write policy for non-idempotent writes which sets max_retries = `0`;
             |
-            | Default: ``2``
+            | Default: ``0``
         * **sleep_between_retries**
-            | An :class:`int`. Milliseconds to sleep between retries. Enter zero to skip sleep. Default: ``500``
+            | An :class:`int`. Milliseconds to sleep between retries. Enter zero to skip sleep. Default: ``0``
         * **socket_timeout**
             | An :class:`int`. Socket idle timeout in milliseconds when processing a database command.
             |

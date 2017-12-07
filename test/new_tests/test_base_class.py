@@ -75,10 +75,6 @@ class TestBaseClass(object):
             if config.has_option('tls', 'certfile'):
                 tls_dict['certfile'] = config.get('tls', 'certfile')
 
-            if config.has_option('tls', 'encrypt_only'):
-                if config.get('tls', 'encrypt_only') == 'True':
-                    tls_dict['encrypt_only'] = True
-
             if config.has_option('tls', 'crl_check'):
                 if config.get('tls', 'crl_check') == 'True':
                     tls_dict['crl_check'] = True
