@@ -21,7 +21,7 @@ def ensure_dropped_index(client, namespace, index_name):
         pass
     retries = 0
     while retries < 10:
-        responses = client.info("sindex")
+        responses = client.info_all("sindex")
         if not index_found_in_info_res(responses, index_name):
             return
         time.sleep(.5)

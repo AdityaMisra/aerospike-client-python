@@ -35,23 +35,13 @@ class TestGetPut():
         _, _, bins = self.as_connection.get(_input)
         assert bins == _expected
 
-    @pytest.mark.parametrize("_input, _expected", [
-        (('test', 'demo', '1'), None),
-        # None is valid entry for set
-        (('test', None, 2), None),
-        (('test', 'some_random_set', 1), None),
-        (('test', 'demo', 'non-existent'), None),
-    ])
-    def test_pos_get_with_data_missing(self, _input, _expected):
+    def test_pos_get_with_data_missing(self):
         """
-            Invoke get() with different combinations of None in key
+            Invoke get with a record which does not exist.
         """
-        try:
-            _, meta, bins = self.as_connection.get(_input)
-            assert bins == _expected
-            assert meta == _expected
-        except e.RecordNotFound as exception:
-            assert exception.code == 2
+        key = ('test', 'demo', 'non-existent-key-that-does-not-exist')
+        with pytest.raises(e.RecordNotFound):
+            self.as_connection.get(key)
 
     @pytest.mark.skip(reason="byte key not currently handled")
     def test_get_information_using_bytes_key(self):

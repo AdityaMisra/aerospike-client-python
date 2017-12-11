@@ -356,8 +356,12 @@ class TestGeospatial(object):
             self.as_connection.put(key, {"loc": geo_object})
             keys.append(key)
 
-        self.as_connection.index_geo2dsphere_create(
-            "test", None, "loc", "loc_index_no_set")
+        try:
+            self.as_connection.index_geo2dsphere_create(
+                "test", None, "loc", "loc_index_no_set")
+        except(e.IndexFoundError):
+            pass
+
         records = []
         query = self.as_connection.query("test", None)
 
@@ -376,8 +380,11 @@ class TestGeospatial(object):
             records.append(record)
 
         query.foreach(callback)
+        try:
+            self.as_connection.index_remove('test', 'loc_index_no_set')
+        except(Exception):
+            pass
 
-        self.as_connection.index_remove('test', 'loc_index_no_set')
         for key in keys:
             self.as_connection.remove(key)
 

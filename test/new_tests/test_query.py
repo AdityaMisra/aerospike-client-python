@@ -590,42 +590,17 @@ class TestQuery(TestBaseClass):
         query.foreach(callback)
         assert len(records) == 2
 
-    def test_query_with_correct_parameters_rangecontains_notuple(self):
+    #  All of these removed tests feature undocumented fragile behavior removed in 3.0.0
+    def test_removed_query_with_correct_parameters_rangecontains_notuple(self):
         """
-            Invoke query() with correct arguments and non tuple argument form
-            on numeric mapvalue index
-            Since the records 'test_age_bins' map has 3 values
-            i, i + 1, i + 2
-
-            and i goes from 0 to 9
-            there should be 8 values in the range [1,3]
-
-            0, 1, 2
-            1, 2, 3
-            2, 3, 4,
-            3, 4, 5
-
-            1 twice, 2 3 times, and 3 3 times
         """
         query = self.as_connection.query('test', 'demo')
         query.select('name', 'test_age')
-        query.where('numeric_map', "range", aerospike.INDEX_TYPE_MAPVALUES,
-                    aerospike.INDEX_NUMERIC, 1, 3)
+        with pytest.raises(e.ParamError):
+            query.where('numeric_map', "range", aerospike.INDEX_TYPE_MAPVALUES,
+                        aerospike.INDEX_NUMERIC, 1, 3)
 
-        records = []
-
-        def callback(input_tuple):
-            _, _, record = input_tuple
-            records.append(record)
-
-        query.foreach(callback)
-        #   The callback should be called once for every matching value in
-        #   a map
-        #   Since 2 records have a value of 1, 3 have a value of 2 and 3
-        #   have a value of 3, this is 8 calls to the callback
-        assert len(records) == 8
-
-    def test_query_with_correct_parameters_containsstring_mapvalues_notuple(
+    def test_removed_query_with_correct_parameters_containsstring_mapvalues_notuple(
         self
     ):
         """
@@ -634,74 +609,39 @@ class TestQuery(TestBaseClass):
         """
         query = self.as_connection.query('test', 'demo')
         query.select('name', 'test_age')
-        query.where('string_map', 'contains', aerospike.INDEX_TYPE_MAPVALUES,
-                    aerospike.INDEX_STRING, "a1")
+        with pytest.raises(e.ParamError):
+            query.where('string_map', 'contains', aerospike.INDEX_TYPE_MAPVALUES,
+                        aerospike.INDEX_STRING, "a1")
 
-        records = []
-
-        def callback(input_tuple):
-            _, _, record = input_tuple
-            records.append(record)
-
-        query.foreach(callback)
-        assert len(records) == 1
-
-    def test_query_with_correct_parameters_containsstring_notuple(self):
+    def test_test_removed_query_containsstring_notuple(self):
         """
             Invoke query() with correct a
             and a string list index arguments and using predicate contains
         """
         query = self.as_connection.query('test', 'demo')
         query.select('name', 'test_age')
-        query.where('string_list', "contains", aerospike.INDEX_TYPE_LIST,
-                    aerospike.INDEX_STRING, "str3")
+        with pytest.raises(e.ParamError):
+            query.where('string_list', "contains", aerospike.INDEX_TYPE_LIST,
+                        aerospike.INDEX_STRING, "str3")
 
-        records = []
-
-        def callback(input_tuple):
-            _, _, record = input_tuple
-            records.append(record)
-
-        query.foreach(callback)
-        assert len(records) == 3
-
-    def test_query_with_correct_parameters_between_notuple(self):
+    def test_removed_query_with_correct_parameters_between_notuple(self):
         """
             Invoke query() with correct arguments and using predicate between
         """
         query = self.as_connection.query('test', 'demo')
         query.select('name', 'test_age')
-        query.where('test_age', 'between', 1, 4)
+        with pytest.raises(e.ParamError):
+            query.where('test_age', 'between', 1, 4)
 
-        records = []
-
-        def callback(input_tuple):
-            _, _, record = input_tuple
-            records.append(record)
-
-        query.foreach(callback)
-        assert len(records) == 4
-
-    @pytest.mark.skip(reason="This segfaults")
     def test_between_predicate_between_one_arg(self):
         """
             Invoke query and using predicate between with invalid predicate
             arguments
         """
         query = self.as_connection.query('test', 'demo')
-        query.select('name', 'test_age')
-        query.where('test_age', 'between', 1)
+        with pytest.raises(e.ParamError):
+            query.where('test_age', 'between', 1)
 
-        records = []
-
-        def callback(input_tuple):
-            _, _, record = input_tuple
-            records.append(record)
-
-        query.foreach(callback)
-        assert len(records) == 4
-
-    @pytest.mark.skip(reason="This segfaults")
     def test_between_predicate_between_no_args(self):
         """
             Invoke query and using predicate between with invalid predicate
@@ -709,16 +649,8 @@ class TestQuery(TestBaseClass):
         """
         query = self.as_connection.query('test', 'demo')
         query.select('name', 'test_age')
-        query.where('test_age', 'between')
-
-        records = []
-
-        def callback(input_tuple):
-            _, _, record = input_tuple
-            records.append(record)
-
-        query.foreach(callback)
-        assert len(records) == 4
+        with pytest.raises(e.ParamError):
+            query.where('test_age', 'between')
 
     def test_query_with_policy_notuple(self):
         """
@@ -727,18 +659,8 @@ class TestQuery(TestBaseClass):
         policy = {'timeout': 1000}
         query = self.as_connection.query('test', 'demo')
         query.select('name', 'test_age')
-        query.where('test_age', 'equals', 1)
-        records = []
-
-        def callback(input_tuple):
-            _, _, record = input_tuple
-            records.append(record)
-
-        query.foreach(callback, policy)
-        assert len(records) == 1
-        records = []
-        query.foreach(callback)
-        assert len(records) == 1
+        with pytest.raises(e.ParamError):
+            query.where('test_age', 'equals', 1)
 
     def test_query_with_multiple_results_call_on_same_query_object(self):
         """

@@ -29,7 +29,7 @@
 #include "exceptions.h"
 #include "policy.h"
 
-#define MAX_STACK_ALLOCATION 20000
+#define MAX_STACK_ALLOCATION 4000
 
 static void
 make_batch_safe_to_free(as_batch* batch, int size);

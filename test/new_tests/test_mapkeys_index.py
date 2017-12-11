@@ -73,6 +73,7 @@ class TestMapKeysIndex(object):
             Invoke index_mapkeys_create() with correct arguments
         """
         policy = {}
+        ensure_dropped_index(self.as_connection, 'test', 'test_string_map_index')
         response_code = self.as_connection.index_map_keys_create(
             'test', 'demo', 'string_map', aerospike.INDEX_STRING,
             'test_string_map_index', policy)
@@ -87,6 +88,7 @@ class TestMapKeysIndex(object):
             Invoke index_mapkeys_create() with correct arguments
         """
         policy = {}
+        ensure_dropped_index(self.as_connection, 'test', 'test_numeric_map_index')
         response_code = self.as_connection.index_map_keys_create(
             'test', 'demo', 'numeric_map', aerospike.INDEX_NUMERIC,
             'test_numeric_map_index', policy)
@@ -101,6 +103,7 @@ class TestMapKeysIndex(object):
             Invoke index_mapkeys_create() with correct arguments
         """
         policy = {}
+        ensure_dropped_index(self.as_connection, 'test', 'test_numeric_map_index')
         response_code = self.as_connection.index_map_keys_create(
             'test', 'demo', 'string_map', aerospike.INDEX_NUMERIC,
             'test_numeric_map_index', policy)
@@ -115,6 +118,7 @@ class TestMapKeysIndex(object):
             Invoke index_mapkeys_create() with correct arguments
         """
         policy = {}
+        ensure_dropped_index(self.as_connection, 'test', 'test_numeric_map_index')
         response_code = self.as_connection.index_map_keys_create(
             'test', 'demo', 'numeric_map', aerospike.INDEX_STRING,
             'test_numeric_map_index', policy)
@@ -172,6 +176,7 @@ class TestMapKeysIndex(object):
             Invoke createindex() with incorrect set
         """
         policy = {}
+        ensure_dropped_index(self.as_connection, 'test', 'test_numeric_map_index')
         response_code = self.as_connection.index_map_keys_create(
             'test', 'demo1', 'numeric_map', aerospike.INDEX_NUMERIC,
             'test_numeric_map_index', policy)
@@ -186,6 +191,7 @@ class TestMapKeysIndex(object):
             Invoke createindex() with nonexistent bin
         """
         policy = {}
+        ensure_dropped_index(self.as_connection, 'test', 'test_string_map_index')
         response_code = self.as_connection.index_map_keys_create(
             'test', 'demo', 'string_map1', aerospike.INDEX_STRING,
             'test_string_map_index', policy)
@@ -255,6 +261,7 @@ class TestMapKeysIndex(object):
             Invoke createindex() with set is None, should not raise an error
         """
         policy = {}
+        ensure_dropped_index(self.as_connection, 'test', 'test_string_map_index')
         response_code = self.as_connection.index_map_keys_create(
             'test', None,
             'string_map', aerospike.INDEX_STRING,
@@ -270,6 +277,7 @@ class TestMapKeysIndex(object):
             multiple times on same bin
         """
         policy = {}
+        ensure_dropped_index(self.as_connection, 'test', 'test_numeric_map_index')
         response_code = self.as_connection.index_map_keys_create(
             'test', 'demo', 'numeric_map', aerospike.INDEX_NUMERIC,
             'test_numeric_map_index', policy)
@@ -291,6 +299,7 @@ class TestMapKeysIndex(object):
         """
         policy = {}
         # Create the index the first time
+        ensure_dropped_index(self.as_connection, 'test', 'test_string_map_index')
         response_code = self.as_connection.index_map_keys_create(
             'test', 'demo', 'string_map', aerospike.INDEX_STRING,
             'test_string_map_index', policy)
@@ -314,6 +323,14 @@ class TestMapKeysIndex(object):
         policy = {}
         index_names = ('test_string_map_index', 'test_string_map_index1')
 
+        # Make sure the indexes don't already exist
+        for index_name in index_names:
+            try:
+                self.as_connection.index_remove('test', index_name, policy)
+                ensure_dropped_index(self.as_connection, 'test', index_name)
+            except:
+                pass
+
         with pytest.raises(e.IndexFoundError):
             for index_name in index_names:
                 response_code = self.as_connection.index_map_keys_create(
@@ -333,6 +350,7 @@ class TestMapKeysIndex(object):
             Invoke createindex() with policy
         """
         policy = {'timeout': 1000}
+        ensure_dropped_index(self.as_connection, 'test', 'test_numeric_map_index')
         response_code = self.as_connection.index_map_keys_create(
             'test', 'demo', 'numeric_map', aerospike.INDEX_NUMERIC,
             'test_numeric_map_index', policy)
@@ -347,6 +365,7 @@ class TestMapKeysIndex(object):
             Invoke createindex() with correct arguments
         """
         policy = {}
+        ensure_dropped_index(self.as_connection, 'test', u'uni_age_index')
         response_code = self.as_connection.index_map_keys_create(
             'test', u'demo', u'numeric_map', aerospike.INDEX_NUMERIC,
             u'uni_age_index', policy)
