@@ -30,6 +30,7 @@
 #include "policy.h"
 #include "tls_info_host.h"
 
+static char* get_unbracketed_ip_and_length(char* ip_start, char* split_point, int* length);
 /**
  ********************************************************************************************************
  * Macros for Info API.
@@ -282,14 +283,20 @@ PyObject * AerospikeClient_InfoNode(AerospikeClient * self, PyObject * args, PyO
 		for (uint32_t i = 0; i < nodes->size; i++) {
 			as_node* node = nodes->array[i];
 			hostname = (char*)as_node_get_address_string(node);
-
 			split_point = strrchr(hostname, ':');
 			if (!split_point) {
 				as_error_update(&err, AEROSPIKE_ERR_CLIENT, "Malformed host name string");
 				goto CLEANUP;
 			}
-			Py_ssize_t host_length = split_point - hostname;
-			py_hostname = PyString_FromStringAndSize(hostname, host_length);
+
+			char* real_hostname_start = NULL;
+			int real_length;
+			/* Since hostname might be '[::1]' and we want to return only '::1' , we need to set
+			 * a pointer
+			 */
+			real_hostname_start = get_unbracketed_ip_and_length(hostname, split_point, &real_length);
+			Py_ssize_t py_host_length = (Py_ssize_t)real_length;
+			py_hostname = PyString_FromStringAndSize(real_hostname_start, py_host_length);
 
 			if (!py_hostname) {
 				as_error_update(&err, AEROSPIKE_ERR_CLIENT, "Failed to create python hostname");
@@ -349,4 +356,25 @@ PyObject * AerospikeClient_InfoNode(AerospikeClient * self, PyObject * args, PyO
 PyObject * AerospikeClient_GetNodes(AerospikeClient * self, PyObject * args, PyObject * kwds)
 {
 	return AerospikeClient_GetNodes_Invoke(self);
+}
+
+/*
+ * This will return the correct starting point of an ipv6 address wrapped in [] and the length of the actual ip
+ * split_point is the address of the rightmost : in the ip_start string
+ * so something like ip_start = "[::1]:3000"
+ * where ip_start is 0xf0 and split_point is 0xf5
+ * len will be set to 3 and the return value will be (char*)0xf1
+ *
+ * If this is ipv4, length is the length of the address, and returned value = ip_start
+ */
+static char* get_unbracketed_ip_and_length(char* ip_start, char* split_point, int* length) {
+	*length = split_point - ip_start;
+	if (*length < 2) {
+		return ip_start;
+	}
+	if (ip_start[0] == '[' && ip_start[*length - 1] == ']') {
+		*length = *length - 2;
+		return (char*)(ip_start + 1);
+	}
+	return ip_start;
 }
